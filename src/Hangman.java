@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,7 +15,9 @@ public class Hangman {
 		String[] wordList = { "une", "arbre", "chien", "fleur", "pluie", "neige", "rire", "vif", "jardin", "soleil" };
 		// Récupère un mot de façon aléatoire de la liste
 		String randomWord = getRandomWord(wordList);
-
+		// On prepare une array list pour accueillir les lettres déja testées
+		ArrayList <Character> alreadyTestedLetters = new ArrayList<Character>();
+		
 		/*
 		 * Créé une linkedhashmap des lettres du mot choisi pour garder l'ordre des
 		 * lettres (pas utile au final) On initialise à false (trouvé oui ou non) chaque
@@ -25,25 +28,28 @@ public class Hangman {
 			lettersMap.put(randomWord.charAt(i), false);
 		}
 
-		// Flag pour déterminer si le jeu a été gagné ou pas
-		Boolean gameEnd = false;
+		
 		// Nombre d'essais au départ
 		int nbTries = 5;
 		// Boucle tant que il y a encore des essais
 		while (nbTries >= 0) {
+			// Flag pour déterminer si le jeu a été gagné ou pas
+			Boolean gameEnd = true;
 			// Détermine si le mot a été découvert
 			for (Entry<Character, Boolean> letter : lettersMap.entrySet()) {
 				if (letter.getValue() == false) {
 					gameEnd = false;
-				} else {
-					gameEnd = true;
-				}
+				} 
 			}
 
 			// Le jeu n'est pas fini
 			if (!gameEnd) {
 				System.out.print("Mot mystère : ");
 				printHiddenRandomWord(lettersMap, randomWord);
+				if (!alreadyTestedLetters.isEmpty()) {
+					System.out.print("Lettres dèjà proposées : ");
+					System.out.println(alreadyTestedLetters);
+				}
 				System.out.print("Proposez une lettre : ");
 				char letterChoice = scan.next().charAt(0);
 
@@ -59,6 +65,10 @@ public class Hangman {
 						} else {
 							System.out.println("Dommage ! La lettre '" + letterChoice
 									+ "' n'est pas dans le mot. Il vous reste " + nbTries + " essais");
+							if(alreadyTestedLetters.lastIndexOf(letterChoice) == -1) {
+								alreadyTestedLetters.add(letterChoice);
+							}
+							nbTries--;
 						}
 					}
 				} else {
@@ -71,7 +81,7 @@ public class Hangman {
 				break;
 			}
 
-			nbTries--;
+			
 		}
 
 	}
