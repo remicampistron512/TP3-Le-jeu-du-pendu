@@ -1,4 +1,4 @@
-# Hangman — README
+# Le jeu du pendu
 
 ## Table des matières
 
